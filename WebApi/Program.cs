@@ -1,11 +1,7 @@
-﻿using Application.Services.Abstractions;
-using Application.Services.Implementations;
-using Infrastructure.Context;
-using Infrastructure.Repositories.Abstractions;
-using Infrastructure.Repositories.Implementations;
+﻿using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using System.Reflection;
+using Infrastructure.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,36 +12,38 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-/*builder.Services.Configure<RouteOptions>(options =>
+builder.Services.Configure<RouteOptions>(options =>
 {
     options.LowercaseUrls = true;
-    options
-})*/
+    options.LowercaseQueryStrings = true;
+});
 
 // Data base context
 builder.Services.AddDbContext<ApplicationDbContext>();
 
 // DI
-builder.Services.AddScoped<IEditorialRepository, EditorialRepository>();
+// builder.Services.AddScoped<IEditorialRepository, EditorialRepository>();
 
-builder.Services.AddScoped<IEditorialService, EditorialService>();
+// builder.Services.AddScoped<IEditorialService, EditorialService>();
 
-
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(options =>
-{
-    options.RegisterAssemblyTypes(Assembly.Load("Infrastructure"))
-    .Where(t => t.Name.EndsWith("Repository"))
-    .AsImplementedInterfaces()
-    .InstancePerLifetimeScope();
+    {
+        options.RegisterAssemblyTypes(Assembly.Load("Infrastructure"))
+        .Where(t => t.Name.EndsWith("Repository"))
+        .AsImplementedInterfaces()
+        .InstancePerLifetimeScope();
 
-    options.RegisterAssemblyTypes(Assembly.Load("Application"))
-    .Where(t => t.Name.EndsWith("Service"))
-    .AsImplementedInterfaces()
-    .InstancePerLifetimeScope();
-});
+        options.RegisterAssemblyTypes(Assembly.Load("Application"))
+        .Where(t => t.Name.EndsWith("Service"))
+        .AsImplementedInterfaces()
+        .InstancePerLifetimeScope();
+    });
+
+builder.Services.AddAutoMapper(Assembly.Load("Application"));
+
 
 var app = builder.Build();
 

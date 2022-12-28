@@ -18,9 +18,10 @@ namespace Infrastructure.Repositories.Implementations
         public async Task<Editorial> Create(Editorial entity)
         {
             _context.Editoriales.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity;
 
+            await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         public async Task<Editorial?> Edit(int id, Editorial entity)
@@ -35,6 +36,7 @@ namespace Infrastructure.Repositories.Implementations
                 _context.Editoriales.Update(model);
                 await _context.SaveChangesAsync();
             }
+
             return model;
         }
 
@@ -46,15 +48,15 @@ namespace Infrastructure.Repositories.Implementations
             {
                 model.Estado = (model.Estado == 0) ? 1 : 0;
 
-
                 _context.Editoriales.Update(model);
                 await _context.SaveChangesAsync();
             }
+
             return model;
         }
 
         public async Task<Editorial?> Find(int id)
-            => await _context.Editoriales.FindAsync(id);
+        => await _context.Editoriales.FindAsync(id);
 
         public async Task<IList<Editorial>> FindAll()
         => await _context.Editoriales.OrderByDescending(e => e.Id).ToListAsync();

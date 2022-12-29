@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Domain;
+using Utils.Paginations;
 
 namespace Application.Dtos.Editoriales.Maps
 {
@@ -9,6 +10,12 @@ namespace Application.Dtos.Editoriales.Maps
 		public EditorialProfile()
 		{
 			CreateMap<Editorial, EditorialDto>();
+
+			CreateMap<EditorialDto, Editorial>();
+
+			CreateMap<RequestPagination<EditorialDto>, RequestPagination<Editorial>>();
+
+			CreateMap<ResponsePagination<Editorial>, ResponsePagination<EditorialDto>>();
 		}
 	}
 }
